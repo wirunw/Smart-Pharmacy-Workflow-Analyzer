@@ -341,6 +341,16 @@
     </div>
 
     <!-- Scripts -->
+    <script>
+    // Handle Netlify Forms submission success
+    document.addEventListener('submit', function(e) {
+        const form = e.target;
+        if (form.getAttribute('data-netlify') === 'true') {
+            // Store flag to show success modal after page reload
+            localStorage.setItem('formSubmitted', 'true');
+        }
+    });
+    </script>
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <script src="app.js"></script>
 </body>

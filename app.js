@@ -125,73 +125,58 @@ const workflowLogForm = document.querySelector('form[name="workflow-log"]');
 const rpaAssessmentForm = document.querySelector('form[name="rpa-assessment"]');
 
 if (workflowLogForm) {
-    workflowLogForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
+    workflowLogForm.addEventListener('submit', async (e) => {
         // Check if user is logged in
         const user = window.netlifyIdentity && window.netlifyIdentity.currentUser();
         if (!user) {
+            e.preventDefault();
             alert('กรุณาเข้าสู่ระบบก่อนบันทึกข้อมูล');
             return;
         }
 
         // Validate form
         if (!validateWorkflowForm()) {
+            e.preventDefault();
             return;
         }
 
-        // Submit form
+        // Let the form submit normally to Netlify
+        // The form will be submitted and page will reload
+        // Show success message before submit
         const formData = new FormData(workflowLogForm);
         const data = Object.fromEntries(formData.entries());
-
         console.log('Workflow Log Data:', data);
-
-        // Show success modal
-        showSuccessModal();
         
-        // Reset form
-        workflowLogForm.reset();
-        setDefaultDate();
-        
-        // Re-fill user email
-        if (user) {
-            document.getElementById('workflow-user-email').value = user.email;
-        }
+        // Store user email to restore after reload
+        localStorage.setItem('userEmail', user.email);
     });
 }
 
 if (rpaAssessmentForm) {
-    rpaAssessmentForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
+    rpaAssessmentForm.addEventListener('submit', async (e) => {
         // Check if user is logged in
         const user = window.netlifyIdentity && window.netlifyIdentity.currentUser();
         if (!user) {
+            e.preventDefault();
             alert('กรุณาเข้าสู่ระบบก่อนส่งข้อมูล');
             return;
         }
 
         // Validate form
         if (!validateRPAForm()) {
+            e.preventDefault();
             return;
         }
 
-        // Submit form
+        // Let the form submit normally to Netlify
+        // The form will be submitted and page will reload
+        // Show success message before submit
         const formData = new FormData(rpaAssessmentForm);
         const data = Object.fromEntries(formData.entries());
-
         console.log('RPA Assessment Data:', data);
-
-        // Show success modal
-        showSuccessModal();
         
-        // Reset form
-        rpaAssessmentForm.reset();
-        
-        // Re-fill user email
-        if (user) {
-            document.getElementById('rpa-user-email').value = user.email;
-        }
+        // Store user email to restore after reload
+        localStorage.setItem('userEmail', user.email);
     });
 }
 
@@ -534,6 +519,13 @@ window.addEventListener('load', () => {
     
     setDefaultDate();
     checkAuthState();
+    
+    // Check if form was just submitted
+    const formSubmitted = localStorage.getItem('formSubmitted');
+    if (formSubmitted === 'true') {
+        showSuccessModal();
+        localStorage.removeItem('formSubmitted');
+    }
 });
 
 // Handle hash changes
