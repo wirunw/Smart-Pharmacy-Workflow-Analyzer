@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Pharmacy Workflow Analyzer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🏪 Smart Pharmacy Workflow Analyzer</h1>
+            <p class="subtitle">เครื่องมือวิเคราะห์งานประจำวันของเภสัชกร</p>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav" id="mainNav">
+            <a href="#home" class="nav-link active" data-page="home">หน้าแรก</a>
+            <a href="#daily-log" class="nav-link" data-page="daily-log">บันทึกงานประจำวัน</a>
+            <a href="#rpa-assessment" class="nav-link" data-page="rpa-assessment">ประเมิน RPA</a>
+            <a href="#dashboard" class="nav-link" data-page="dashboard" id="dashboardLink">Dashboard</a>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Home Page -->
+            <section id="home" class="page active">
+                <div class="hero">
+                    <h2>ยินดีต้อนรับสู่ระบบวิเคราะห์งานเภสัชกร</h2>
+                    <p>ระบบช่วยเก็บข้อมูลกิจกรรมรายวัน เพื่อวิเคราะห์คอขวดและศักยภาพการใช้ RPA</p>
+                </div>
+
+                <div class="info-cards">
+                    <div class="card">
+                        <div class="card-icon">📊</div>
+                        <h3>บันทึกงานประจำวัน</h3>
+                        <p>บันทึกเวลาและกิจกรรมที่ทำในแต่ละวันเพื่อวิเคราะห์ workflow</p>
+                        <button class="btn btn-primary" onclick="navigateTo('daily-log')">เริ่มบันทึก</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">🤖</div>
+                        <h3>ประเมิน RPA</h3>
+                        <p>ประเมินลักษณะงานว่าเหมาะสมกับการใช้ RPA หรือไม่</p>
+                        <button class="btn btn-primary" onclick="navigateTo('rpa-assessment')">ประเมินเลย</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">📈</div>
+                        <h3>Dashboard</h3>
+                        <p>ดูภาพรวมข้อมูลและการวิเคราะห์ (สำหรับ Admin)</p>
+                        <button class="btn btn-primary" onclick="navigateTo('dashboard')">ดู Dashboard</button>
+                    </div>
+                </div>
+
+                <div class="auth-section">
+                    <h3>เข้าสู่ระบบ</h3>
+                    <p>กรุณาเข้าสู่ระบบเพื่อเริ่มบันทึกข้อมูล</p>
+                    <button class="btn btn-secondary" id="loginBtn">เข้าสู่ระบบ / ลงทะเบียน</button>
+                    <button class="btn btn-danger hidden" id="logoutBtn">ออกจากระบบ</button>
+                    <div id="userInfo" class="user-info hidden"></div>
+                </div>
+            </section>
+
+            <!-- Daily Log Page -->
+            <section id="daily-log" class="page">
+                <div class="page-header">
+                    <h2>📋 บันทึกงานประจำวัน</h2>
+                    <p>บันทึกกิจกรรมและเวลาที่ใช้ในแต่ละงาน</p>
+                </div>
+
+                <form name="workflow-log" method="POST" data-netlify="true" class="form">
+                    <input type="hidden" name="form-name" value="workflow-log">
+                    <input type="hidden" name="user-email" id="workflow-user-email">
+
+                    <div class="form-group">
+                        <label for="date">วันที่ *</label>
+                        <input type="date" id="date" name="date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pharmacy-name">ชื่อร้านยา *</label>
+                        <input type="text" id="pharmacy-name" name="pharmacy-name" placeholder="ระบุชื่อร้านยา" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="shift">กะงาน *</label>
+                        <select id="shift" name="shift" required>
+                            <option value="">-- เลือกกะงาน --</option>
+                            <option value="morning">เช้า (08:00 - 16:00)</option>
+                            <option value="evening">บ่าย (16:00 - 24:00)</option>
+                            <option value="night">ดึก (00:00 - 08:00)</option>
+                        </select>
+                    </div>
+
+                    <div class="activities-section">
+                        <h3>กิจกรรมและเวลาที่ใช้ (นาที)</h3>
+                        
+                        <div class="activity-item">
+                            <label>1. คีย์ข้อมูลประกันสุขภาพ (Insurance Data Entry)</label>
+                            <input type="number" name="insurance-entry" min="0" placeholder="0">
+                            <small>คีย์ข้อมูลเคลมประกัน และตรวจสอบสิทธิ์ผู้ป่วย</small>
+                        </div>
+
+                        <div class="activity-item">
+                            <label>2. ทำบัญชีขย. 9-11 (Narcotics Accounting)</label>
+                            <input type="number" name="narcotics-accounting" min="0" placeholder="0">
+                            <small>บันทึกยอดยาเสพติด นำเข้า-นำออก ทำสรุปยอดรายเดือน</small>
+                        </div>
+
+                        <div class="activity-item">
+                            <label>3. เช็คสต็อกยา (Stock Checking)</label>
+                            <input type="number" name="stock-checking" min="0" placeholder="0">
+                            <small>ตรวจสอบยาใกล้หมดอายุ สั่งซื้อยาเติมสต็อก</small>
+                        </div>
+
+                        <div class="activity-item">
+                            <label>4. รับ-จ่ายยา (Dispensing)</label>
+                            <input type="number" name="dispensing" min="0" placeholder="0">
+                            <small>รับสั่งยา เตรียมยา ตรวจสอบยา ให้คำแนะนำผู้ป่วย</small>
+                        </div>
+
+                        <div class="activity-item">
+                            <label>5. ให้คำปรึกษา (Consultation)</label>
+                            <input type="number" name="consultation" min="0" placeholder="0">
+                            <small>ให้คำปรึกษาเรื่องสุขภาพ อาการผิดปกติ การใช้ยา</small>
+                        </div>
+
+                        <div class="activity-item">
+                            <label>6. ทำงานเอกสาร/รายงาน (Documentation)</label>
+                            <input type="number" name="documentation" min="0" placeholder="0">
+                            <small>ทำรายงานต่างๆ เช่น รายงานยอดขาย สรุปรายวัน</small>
+                        </div>
+
+                        <div class="activity-item">
+                            <label>7. ประชุม/อบรม (Meeting/Training)</label>
+                            <input type="number" name="meeting" min="0" placeholder="0">
+                            <small>ประชุมทีมงาน อบรมเพิ่มความรู้ การสอนนักเรียนเภสัชศาสตร์</small>
+                        </div>
+
+                        <div class="activity-item">
+                            <label>8. งานอื่นๆ (Other Tasks)</label>
+                            <input type="number" name="other-tasks" min="0" placeholder="0">
+                            <small>งานที่ไม่อยู่ในรายการด้านบน</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="challenges">ปัญหาหรือความท้าทายที่พบ (ถ้ามี)</label>
+                        <textarea id="challenges" name="challenges" rows="4" placeholder="ระบุปัญหาที่พบ เช่น ระบบล่ม ยาขาดตลอด ฯลฯ"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="suggestions">ข้อเสนอแนะสำหรับปรับปรุง</label>
+                        <textarea id="suggestions" name="suggestions" rows="4" placeholder="ข้อเสนอแนะเพื่อปรับปรุง workflow หรืองานที่อยากให้ RPA ช่วย"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-large">บันทึกข้อมูล</button>
+                </form>
+            </section>
+
+            <!-- RPA Assessment Page -->
+            <section id="rpa-assessment" class="page">
+                <div class="page-header">
+                    <h2>🤖 ประเมินความเหมาะสมในการใช้ RPA</h2>
+                    <p>ประเมินงานที่คิดว่าน่าจะใช้ RPA ช่วยแทนที่ครับ</p>
+                </div>
+
+                <form name="rpa-assessment" method="POST" data-netlify="true" class="form">
+                    <input type="hidden" name="form-name" value="rpa-assessment">
+                    <input type="hidden" name="user-email" id="rpa-user-email">
+
+                    <div class="form-group">
+                        <label for="task-name">ชื่องาน/กิจกรรม *</label>
+                        <input type="text" id="task-name" name="task-name" placeholder="ระบุชื่องานที่ต้องการประเมิน" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="task-category">หมวดหมู่งาน *</label>
+                        <select id="task-category" name="task-category" required>
+                            <option value="">-- เลือกหมวดหมู่ --</option>
+                            <option value="data-entry">การคีย์ข้อมูล (Data Entry)</option>
+                            <option value="reporting">การทำรายงาน (Reporting)</option>
+                            <option value="accounting">การบันทึกบัญชี (Accounting)</option>
+                            <option value="communication">การส่งข้อมูล/แจ้งเตือน (Communication)</option>
+                            <option value="verification">การตรวจสอบ (Verification)</option>
+                            <option value="other">อื่นๆ</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="frequency">ความถี่ในการทำงาน *</label>
+                        <select id="frequency" name="frequency" required>
+                            <option value="">-- เลือกความถี่ --</option>
+                            <option value="daily">ทุกวัน (Daily)</option>
+                            <option value="weekly">ทุกสัปดาห์ (Weekly)</option>
+                            <option value="monthly">ทุกเดือน (Monthly)</option>
+                            <option value="quarterly">ทุกไตรมาส (Quarterly)</option>
+                            <option value="occasionally">เป็นครั้งคราว (Occasionally)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="time-per-task">เวลาที่ใช้ต่อครั้ง (นาที) *</label>
+                        <input type="number" id="time-per-task" name="time-per-task" min="1" placeholder="ระบุเวลาที่ใช้" required>
+                    </div>
+
+                    <div class="assessment-questions">
+                        <h3>ประเมินลักษณะงาน (1 = น้อย, 5 = มาก)</h3>
+
+                        <div class="question-item">
+                            <label>1. งานมีกฎเกณฑ์ที่ชัดเจน (Rule-based)</label>
+                            <div class="rating">
+                                <label><input type="radio" name="rule-based" value="1" required> 1</label>
+                                <label><input type="radio" name="rule-based" value="2"> 2</label>
+                                <label><input type="radio" name="rule-based" value="3"> 3</label>
+                                <label><input type="radio" name="rule-based" value="4"> 4</label>
+                                <label><input type="radio" name="rule-based" value="5"> 5</label>
+                            </div>
+                        </div>
+
+                        <div class="question-item">
+                            <label>2. งานซ้ำซากแบบเดิม (Repetitive)</label>
+                            <div class="rating">
+                                <label><input type="radio" name="repetitive" value="1" required> 1</label>
+                                <label><input type="radio" name="repetitive" value="2"> 2</label>
+                                <label><input type="radio" name="repetitive" value="3"> 3</label>
+                                <label><input type="radio" name="repetitive" value="4"> 4</label>
+                                <label><input type="radio" name="repetitive" value="5"> 5</label>
+                            </div>
+                        </div>
+
+                        <div class="question-item">
+                            <label>3. งานมีขั้นตอนที่เป็นลำดับ (Standardized Process)</label>
+                            <div class="rating">
+                                <label><input type="radio" name="standardized" value="1" required> 1</label>
+                                <label><input type="radio" name="standardized" value="2"> 2</label>
+                                <label><input type="radio" name="standardized" value="3"> 3</label>
+                                <label><input type="radio" name="standardized" value="4"> 4</label>
+                                <label><input type="radio" name="standardized" value="5"> 5</label>
+                            </div>
+                        </div>
+
+                        <div class="question-item">
+                            <label>4. งานใช้ข้อมูลที่เป็นระบบ (Structured Data)</label>
+                            <div class="rating">
+                                <label><input type="radio" name="structured-data" value="1" required> 1</label>
+                                <label><input type="radio" name="structured-data" value="2"> 2</label>
+                                <label><input type="radio" name="structured-data" value="3"> 3</label>
+                                <label><input type="radio" name="structured-data" value="4"> 4</label>
+                                <label><input type="radio" name="structured-data" value="5"> 5</label>
+                            </div>
+                        </div>
+
+                        <div class="question-item">
+                            <label>5. งานไม่ต้องการการตัดสินใจที่ซับซ้อน (Minimal Decision Making)</label>
+                            <div class="rating">
+                                <label><input type="radio" name="minimal-decision" value="1" required> 1</label>
+                                <label><input type="radio" name="minimal-decision" value="2"> 2</label>
+                                <label><input type="radio" name="minimal-decision" value="3"> 3</label>
+                                <label><input type="radio" name="minimal-decision" value="4"> 4</label>
+                                <label><input type="radio" name="minimal-decision" value="5"> 5</label>
+                            </div>
+                        </div>
+
+                        <div class="question-item">
+                            <label>6. งานใช้โปรแกรมคอมพิวเตอร์ (Computer-based)</label>
+                            <div class="rating">
+                                <label><input type="radio" name="computer-based" value="1" required> 1</label>
+                                <label><input type="radio" name="computer-based" value="2"> 2</label>
+                                <label><input type="radio" name="computer-based" value="3"> 3</label>
+                                <label><input type="radio" name="computer-based" value="4"> 4</label>
+                                <label><input type="radio" name="computer-based" value="5"> 5</label>
+                            </div>
+                        </div>
+
+                        <div class="question-item">
+                            <label>7. งานมีปริมาณสูง (High Volume)</label>
+                            <div class="rating">
+                                <label><input type="radio" name="high-volume" value="1" required> 1</label>
+                                <label><input type="radio" name="high-volume" value="2"> 2</label>
+                                <label><input type="radio" name="high-volume" value="3"> 3</label>
+                                <label><input type="radio" name="high-volume" value="4"> 4</label>
+                                <label><input type="radio" name="high-volume" value="5"> 5</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="system-name">ชื่อโปรแกรม/ระบบที่ใช้</label>
+                        <input type="text" id="system-name" name="system-name" placeholder="ระบุชื่อโปรแกรมที่ใช้ทำงานนี้">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="steps">ขั้นตอนการทำงาน</label>
+                        <textarea id="steps" name="steps" rows="5" placeholder="อธิบายขั้นตอนการทำงานโดยละเอียด"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="challenges-rpa">ปัญหาหรือความยุ่งยากในการทำงาน</label>
+                        <textarea id="challenges-rpa" name="challenges-rpa" rows="4" placeholder="ระบุปัญหาที่พบ เช่น ต้องคีย์ข้อมูลหลายครั้ง ต้องตรวจสอบหลายระบบ ฯลฯ"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="upload-screenshot">แนบภาพหน้าจอโปรแกรม (ถ้ามี)</label>
+                        <input type="file" id="upload-screenshot" name="upload-screenshot" accept="image/*">
+                        <small>แนบภาพหน้าจอโปรแกรมเพื่อให้เข้าใจงานมากขึ้น</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-large">ส่งข้อมูลการประเมิน</button>
+                </form>
+            </section>
+
+            <!-- Dashboard Page -->
+            <section id="dashboard" class="page">
+                <div class="page-header">
+                    <h2>📈 Dashboard (Admin Only)</h2>
+                    <p>ภาพรวมข้อมูลและการวิเคราะห์</p>
+                </div>
+
+                <div class="dashboard-content" id="dashboardContent">
+                    <div class="loading">กำลังโหลดข้อมูล...</div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 Smart Pharmacy Workflow Analyzer | สำหรับการวิจัยทางวิชาการ</p>
+        </footer>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-icon">✓</div>
+            <h2>บันทึกข้อมูลสำเร็จ!</h2>
+            <p>ข้อมูลของคุณถูกบันทึกเรียบร้อยแล้ว</p>
+            <button class="btn btn-primary" onclick="closeModal()">ตกลง</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
