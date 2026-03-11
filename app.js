@@ -541,22 +541,3 @@ if (window.netlifyIdentity) {
     window.netlifyIdentity.on('login', checkAuthState);
     window.netlifyIdentity.on('logout', checkAuthState);
 }
-
-// Handle radio button styling
-document.querySelectorAll('.rating').forEach(ratingGroup => {
-    const labels = ratingGroup.querySelectorAll('label');
-    
-    labels.forEach(label => {
-        const radio = label.querySelector('input[type="radio"]');
-        
-        radio.addEventListener('change', () => {
-            // Remove checked class from all labels in this group
-            labels.forEach(l => l.classList.remove('checked'));
-            
-            // Add checked class to the selected label
-            if (radio.checked) {
-                label.classList.add('checked');
-            }
-        });
-    });
-});
