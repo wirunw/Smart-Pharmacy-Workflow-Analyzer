@@ -51,10 +51,6 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# Netlify Identity Configuration
-[context.production.environment]
-  NETLIFY_SITE_ID = "your-site-id-here"
-  NETLIFY_AUTH_TOKEN = "your-auth-token-here"
 
 # Forms configuration (automatically handled by Netlify)
 # Forms are detected by the data-netlify="true" attribute in HTML
