@@ -272,7 +272,7 @@ function checkDashboardAccess() {
     const user = window.netlifyIdentity && window.netlifyIdentity.currentUser();
     
     // Admin email list - replace with actual admin emails
-    const adminEmails = ['virun@example.com', 'admin@example.com']; // Update with real admin emails
+    const adminEmails = ['wirun.wetsiri@gmail.com', 'asryhero@gmail.com']; // Update with real admin emails
     
     if (!user) {
         dashboardContent.innerHTML = `
