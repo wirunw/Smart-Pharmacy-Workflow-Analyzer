@@ -346,7 +346,7 @@ function loadDashboard() {
         <div class="dashboard-section">
             <h4>💾 จัดการข้อมูล</h4>
             <p>คุณสามารถ Export ข้อมูลจาก Netlify Dashboard เพื่อนำไปวิเคราะห์เพิ่มเติม</p>
-            <a href="https://app.netlify.com/sites/YOUR_SITE_NAME/forms" target="_blank" class="btn btn-primary">
+            <a href="https://app.netlify.com/sites/smart-pharmacy-workflow-analyzer/forms" target="_blank" class="btn btn-primary">
                 ดูข้อมูลทั้งหมดใน Netlify
             </a>
         </div>
